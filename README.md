@@ -2,7 +2,9 @@
 
 Control remoto del botón de apertura del telefonillo Fermax 9445 desde Home Assistant, usando un ESP32 alimentado por la propia placa del telefonillo.
 
-> **Alcance real del proyecto**: solo apertura remota. No hay detección de llamada, no hay audio ni vídeo. Si buscas algo más complejo, este telefonillo no lo permite fácilmente.
+| :exclamation: **Alcance del proyecto** :exclamation:|
+|----------------------------------------------|
+| Sólo permite la apertura remota. No hay detección de llamada, no hay audio ni vídeo.|
 
 ---
 
@@ -10,14 +12,13 @@ Control remoto del botón de apertura del telefonillo Fermax 9445 desde Home Ass
 
 <img src="bocetos/telefonillo.png" width="400" height="400"> <img src="bocetos/placa_esp32.png" width="400" height="400">
 
-El Fermax 9445 tiene botones físicos en la placa: uno de **cámara** y uno de **llave** (apertura). Cada botón tiene dos pads en la PCB que, al pulsarlo, se cortocircuitan.
-
+El Fermax 9445 tiene botones físicos en la placa: uno de ellos sirve para activar la **cámara** y el otro con la **llave** sirve para abrir la puerta.
 La idea es simple: soldar un relé de estado sólido AQY210 en paralelo a cada botón, de modo que el ESP32 pueda cerrar ese circuito por software, simulando exactamente una pulsación física.
 
-La automatización en Home Assistant hace:
-1. Activar el pin de **cámara** (activa el telefonillo)
+De esta manera, podremos simular las pulsacines de ambos botones y realizar la apertura de la puerta en remoto siguiendo el siguiente flujo:
+1. Simular pulsar el botón **cámara** (activa el telefonillo)
 2. Esperar 1 segundo
-3. Activar el pin de **llave** (abre la puerta)
+3. Simular pulsar el botón **llave** (abre la puerta)
 
 ---
 
