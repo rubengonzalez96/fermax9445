@@ -8,8 +8,8 @@ Control remoto del botón de apertura del telefonillo Fermax 9445 desde Home Ass
 
 ## Cómo funciona
 
-[Telefonillo](bocetos/telefonillo.png)
-[Placa y esp32](bocetos/placa_esp32.png)
+![Telefonillo](bocetos/telefonillo.png)
+![Placa y esp32](bocetos/placa_esp32.png)
 
 El Fermax 9445 tiene botones físicos en la placa: uno de **cámara** y uno de **llave** (apertura). Cada botón tiene dos pads en la PCB que, al pulsarlo, se cortocircuitan.
 
