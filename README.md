@@ -10,7 +10,7 @@ Control remoto del botón de apertura del telefonillo Fermax 9445 desde Home Ass
 
 El Fermax 9445 tiene botones físicos en la placa: uno de **cámara** y uno de **llave** (apertura). Cada botón tiene dos pads en la PCB que, al pulsarlo, se cortocircuitan.
 
-La idea es simple: soldar un optoacoplador PC817 en paralelo a cada botón, de modo que el ESP32 pueda cerrar ese circuito por software, simulando exactamente una pulsación física.
+La idea es simple: soldar un relé de estado sólido AQY210 en paralelo a cada botón, de modo que el ESP32 pueda cerrar ese circuito por software, simulando exactamente una pulsación física.
 
 La automatización en Home Assistant hace:
 1. Activar el pin de **cámara** (activa el telefonillo)
@@ -22,7 +22,7 @@ La automatización en Home Assistant hace:
 ## Hardware
 
 - ESP32 (cualquier variante)
-- 2× optoacoplador PC817
+- 2× relé de estado sólido [AQY210](https://es.aliexpress.com/item/1005009058582391.html?spm=a2g0o.productlist.main.2.642253b088SiRU&aem_p4p_detail=202511130344231234185261474500000038759&algo_pvid=35455d73-76f4-4f5b-87aa-74443dad6541&pdp_ext_f=%7B%22order%22%3A%224%22%2C%22eval%22%3A%221%22%2C%22fromPage%22%3A%22search%22%7D&utparam-url=scene%3Asearch%7Cquery_from%3A%7Cx_object_id%3A1005009058582391%7C_p_origin_prod%3A&search_p4p_id=202511130344231234185261474500000038759_1)
 - Alimentación tomada de la propia placa del Fermax (ver más abajo)
 
 ### Pines utilizados
@@ -32,19 +32,19 @@ La automatización en Home Assistant hace:
 | GPIO 18 | Simula botón cámara |
 | GPIO 19 | Simula botón llave (apertura) |
 
-### Conexión de los PC817
+### Conexión de los AQY210
 
-Cada optoacoplador va soldado en paralelo al botón correspondiente de la placa del Fermax:
+Cada relé va soldado en paralelo al botón correspondiente de la placa del Fermax:
 
 ```
-GPIO ESP32 → resistencia 1kΩ → LED+ del PC817
-GND ESP32  →                   LED- del PC817
+GPIO ESP32 → LED+ del AQY210
+GND ESP32  → LED- del AQY210
 
-Colector PC817 → pad 1 del botón Fermax
-Emisor   PC817 → pad 2 del botón Fermax
+Colector AQY210 → pad 1 del botón Fermax
+Emisor   AQY210 → pad 2 del botón Fermax
 ```
 
-Cuando el ESP32 pone el pin en HIGH, el LED del optoacoplador conduce y el fototransistor cierra el circuito del botón — exactamente como si lo pulsaras a mano.
+Cuando el ESP32 pone el pin en HIGH, el LED del relé conduce y el fototransistor cierra el circuito del botón — exactamente como si lo pulsaras a mano.
 
 ### Alimentación del ESP32
 
@@ -78,7 +78,7 @@ switch:
 
 ## Automatización en Home Assistant
 
-La automatización que abre la puerta cuando se dispara manualmente (botón en el dashboard, NFC, lo que quieras):
+La automatización que abre la puerta cuando se dispara manualmente:
 
 ```yaml
 alias: "Fermax — Abrir puerta"
@@ -101,7 +101,7 @@ sequence:
 
 ---
 
-## Limitaciones conocidas
+## Limitaciones del proyecto
 
 - **No hay detección de llamada** — no sabemos cuándo llaman, hay que abrir manualmente desde HA.
 - **No hay audio ni vídeo** — el protocolo del Fermax 9445 no lo expone de forma accesible.
