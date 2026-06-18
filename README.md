@@ -114,7 +114,13 @@ sequence:
 
 ## Fotos
 
-*Pendiente de añadir fotos del montaje.*
+### Interior del portero
+
+<img src="fotos/Interior_Portero.png" alt="Interior del telefonillo Fermax 9445" width="600">
+
+### AQY210
+
+<img src="fotos/AQY210.png" alt="Relé de estado sólido AQY210" width="400">
 
 ---
 
