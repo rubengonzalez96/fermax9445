@@ -32,8 +32,8 @@ De esta manera, podremos simular las pulsacines de ambos botones y realizar la a
 
 | Pin ESP32 | Función |
 |---|---|
-| GPIO 18 | Simula botón cámara |
-| GPIO 19 | Simula botón llave (apertura) |
+| GPIO 26 | Simula botón cámara |
+| GPIO 27 | Simula botón llave (apertura) |
 
 ### Conexión de los AQY210
 
@@ -51,56 +51,51 @@ Cuando el ESP32 pone el pin en HIGH, el LED del relé conduce y el fototransisto
 
 ### Alimentación del ESP32
 
-*Pendiente de documentar — el ESP32 se alimenta directamente desde la placa del Fermax.*
+El ESP32 se alimenta directamente desde la placa del Fermax.
+En la parte superior de la parte trasera de la placa (donde no están los pulsadores de los botones) existe un punto de alimentación de 5V. -*No se dispone de fotografía*-
+
+Otra opción igualmente válida es alimentar el ESP32 por cable.
 
 ---
 
 ## Firmware (ESPHome)
 
-El ESP32 corre ESPHome. La configuración es mínima: dos `output` que activan los pines durante un breve pulso.
+El ESP32 corre ESPHome. La configuración es mínima: dos `output` que activan los pines durante un breve pulso de 300ms y los vuelve a desactivar. Este breve paso de corriente es suficiente para simular la pulsación fisica del boton por software.
 
 ```yaml
-# Fragmento esphome — ajusta a tu configuración
-switch:
-  - platform: gpio
-    pin: GPIO18
-    id: btn_camara
-    name: "Fermax cámara"
-    restore_mode: ALWAYS_OFF
+# Fragmento esphome
 
+switch:
+  # ---------- BOTÓN DERECHA ARRIBA ----------
   - platform: gpio
-    pin: GPIO19
-    id: btn_llave
-    name: "Fermax llave"
+    name: "Telefonillo Botón D1"
+    pin: GPIO26
+    id: boton_d1
     restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - delay: 300ms
+      - switch.turn_off: boton_d1
+
+  # ---------- BOTÓN DERECHA ABAJO ----------
+  - platform: gpio
+    name: "Telefonillo Botón D2"
+    pin: GPIO27
+    id: boton_d2
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - delay: 300ms
+      - switch.turn_off: boton_d2
 ```
 
-> El archivo completo estará en `firmware/fermax.yaml` cuando lo añada.
+> El archivo completo está en `firmware/fermax.yaml`.
 
 ---
 
-## Automatización en Home Assistant
+## Uso en Home Assistant
 
-La automatización que abre la puerta cuando se dispara manualmente:
+El script que abre la puerta cuando se dispara manualmente. Simplemente acciona el botón de la cámara, espera durante 1 segundo y acciona el botón de la llave.
 
-```yaml
-alias: "Fermax — Abrir puerta"
-sequence:
-  - service: switch.turn_on
-    target:
-      entity_id: switch.fermax_camara
-  - delay: "00:00:01"
-  - service: switch.turn_on
-    target:
-      entity_id: switch.fermax_llave
-  - delay: "00:00:00.500"
-  - service: switch.turn_off
-    target:
-      entity_id: switch.fermax_llave
-  - service: switch.turn_off
-    target:
-      entity_id: switch.fermax_camara
-```
+<img src="fotos/script.png" width="400" height="400">
 
 ---
 
