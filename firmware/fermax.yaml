@@ -1,2 +1,53 @@
-# fermax.yaml — pendiente de añadir por el autor
-# Aquí irá la configuración completa de ESPHome
+esphome:
+  name: telefonillo-esp32
+  friendly_name: Telefonillo ESP32
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# WiFi
+wifi:
+  ssid: "tu_red_wifi"
+  password: "tu_contraseña_wifi"
+  power_save_mode: none
+  reboot_timeout: 0s
+  fast_connect: false
+
+  ap:
+    ssid: "Telefonillo ESP32 Fallback"
+    password: "tu_contraseña_fallback"
+
+captive_portal:
+
+# Logs
+logger:
+
+# API para Home Assistant
+api:
+
+# OTA (actualizaciones sin cable)
+ota:
+
+
+switch:
+  # ---------- BOTÓN DERECHA ARRIBA ----------
+  - platform: gpio
+    name: "Telefonillo Botón D1"
+    pin: GPIO26
+    id: boton_d1
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - delay: 300ms
+      - switch.turn_off: boton_d1
+
+  # ---------- BOTÓN DERECHA ABAJO ----------
+  - platform: gpio
+    name: "Telefonillo Botón D2"
+    pin: GPIO27
+    id: boton_d2
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - delay: 300ms
+      - switch.turn_off: boton_d2
